@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <link rel="stylesheet" href="deps/oscilloscope.css">
+        <script src="deps/oscilloscope.js"></script>
+        <link rel="stylesheet" href="main.css">
+    </head>
+    <body>
+        <div id="scope"></div>
+
+        <script type="text/javascript">
+            var gain = 1.4; // CHANGE IF NEEDED 
+            var ctx = new AudioContext();
+            var oscilloscope = new Oscilloscope('#scope', ctx);
+            var constraints = { audio: true, video: false };
+            navigator.mediaDevices.getUserMedia(constraints).then(function(mediaStream) {
+                var src = ctx.createMediaStreamSource(mediaStream);
+                var gainNode = ctx.createGain()
+                gainNode.gain.value = gain;
+                src.connect(gainNode);
+                gainNode.connect(oscilloscope.analyserNode)
+                oscilloscope.start();
+            });
+        </script>
+    </body>
+</html>
